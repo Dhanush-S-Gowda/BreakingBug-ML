@@ -153,11 +153,11 @@ Num_cols
 
 print(f'categorical Columns: {cat_cols}')
 print(f'numerical Columns: {Num_cols}')
-
+#changed
 categorical_cols = ['sex', 'dataset', 'cp', 'restecg', 'slope', 'thal']
 bool_cols = ['fbs', 'exang']
 numerical_cols = ['age', 'trestbps', 'chol', 'thalch', 'oldpeak', 'ca', 'num']
-
+#changed
 def impute_categorical_missing_data(passed_col):
   df_null = df[df[passed_col].isnull()]
   df_not_null = df[df[passed_col].notnull()]
@@ -186,10 +186,12 @@ def impute_categorical_missing_data(passed_col):
   imputed_values = pd.DataFrame(imputed_values, columns=X.columns, index=X.index)
 
   X_train, X_test, y_train, y_test = train_test_split(imputed_values, y, test_size=0.2, random_state=42)
+
   rf_classifier = RandomForestClassifier(random_state=16)
   rf_classifier.fit(X_train, y_train)
 
   y_pred = rf_classifier.predict(X_test)
+
   acc_score = accuracy_score(y_test, y_pred)
   print(f"The feature '{passed_col}' has been imputed with {round((acc_score * 100), 2)}% accuracy\n")
 
@@ -209,16 +211,14 @@ def impute_categorical_missing_data(passed_col):
   imputed_null_values = imputer.transform(X_null)
   imputed_null_values = pd.DataFrame(imputed_null_values, columns=X.columns, index=X_null.index)
 
-  if len(df_null) > 0:
-      predictions = rf_classifier.predict(imputed_null_values)
-      df.loc[df[passed_col].isnull(), passed_col] = predictions
-      if passed_col in bool_cols:
-          df[passed_col] = df[passed_col].map({0: False, 1: True})
+  predictions = rf_classifier.predict(imputed_null_values)
+  df_null[passed_col] = predictions
+
 
   df_combined = pd.concat([df_not_null, df_null])
 
   return df_combined[passed_col]
-
+#changed
 def impute_continuous_missing_data(passed_col):
     df_null = df[df[passed_col].isnull()]
     df_not_null = df[df[passed_col].notnull()]
@@ -243,6 +243,7 @@ def impute_continuous_missing_data(passed_col):
     imputed_values = pd.DataFrame(imputed_values, columns=X.columns, index=X.index)
 
     X_train, X_test, y_train, y_test = train_test_split(imputed_values, y, test_size=0.2, random_state=42)
+
     rf_regressor = RandomForestRegressor(random_state=16)
     rf_regressor.fit(X_train, y_train)
 
@@ -267,9 +268,8 @@ def impute_continuous_missing_data(passed_col):
     imputed_null_values = imputer.transform(X_null)
     imputed_null_values = pd.DataFrame(imputed_null_values, columns=X.columns, index=X_null.index)
 
-    if len(df_null) > 0:
-        predictions = rf_regressor.predict(imputed_null_values)
-        df.loc[df[passed_col].isnull(), passed_col] = predictions
+    predictions = rf_regressor.predict(imputed_null_values)
+    df_null['passed_col'] = predictions
 
     df_combined = pd.concat([df_not_null, df_null])
 
