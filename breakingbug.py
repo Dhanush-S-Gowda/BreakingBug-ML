@@ -502,8 +502,8 @@ def hyperparameter_tuning(X, y, categorical_columns, models):
     X_encoded = X.copy()
     onehotencoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
     for col in categorical_columns:
-        X_encoded = X_encoded.join(pd.DataFrame(onehotencoder.fit_transform(X_encoded[[col]]),
-                                                columns=onehotencoder.get_feature_names_out([col]),
+        X_encoded = X_encoded.join(pd.DataFrame(onehotencoder.fit_transform(X_encoded[[col]]), 
+                                                columns=onehotencoder.get_feature_names_out([col]), 
                                                 index=X_encoded.index))
         X_encoded = X_encoded.drop(col, axis=1)
 
@@ -512,23 +512,23 @@ def hyperparameter_tuning(X, y, categorical_columns, models):
     for model_name, model in models.items():
         param_grid = {}
         if model_name == 'Logistic Regression':
-            param_grid = {'C': [0.1, 1, 10, 100]}
+            param_grid = {'C': [0.01,0.03, 0.09, 0.1, 1]}
         elif model_name == 'KNN':
-            param_grid = {'n_neighbors': [3, 5, 7, 9]}
+            param_grid = {'n_neighbors': [13, 15, 17, 19]}
         elif model_name == 'NB':
-            param_grid = {'var_smoothing': [1e-9, 1e-8, 1e-7, 1e-6]}
+            param_grid = {'var_smoothing': [1e-6, 1e-5, 1e-4, 1e-3]}
         elif model_name == 'SVM':
-            param_grid = {'C': [0.1, 1, 10, 100], 'gamma': [0.1, 1, 10, 100]}
+            param_grid = {'C': [0.6, 0.9, 1, 1.3], 'gamma': [0.01, 0.03, 0.06, 0.09]}
         elif model_name == 'Decision Tree':
-            param_grid = {'max_depth': [None, 10, 20, 30], 'min_samples_split': [2, 5, 10]}
+            param_grid = {'max_depth': [5, 10, 20, 30], 'min_samples_split': [1, 2, 3, 5]}
         elif model_name == 'Random Forest':
-            param_grid = {'n_estimators': [100, 200, 300], 'max_depth': [None, 10, 20, 30], 'min_samples_split': [2, 5, 10]}
+            param_grid = {'n_estimators': [ 300, 400, 500, 600], 'max_depth': [15, 20, 25, 30], 'min_samples_split': [15, 20, 25, 30]}
         elif model_name == 'XGBoost':
-            param_grid = {'learning_rate': [0.01, 0.1, 0.2], 'n_estimators': [100, 200, 300], 'max_depth': [3, 5, 7]}
+            param_grid = {'learning_rate': [0.003, 0.006, 0.009, 0.01], 'n_estimators': [150, 200, 250, 300], 'max_depth': [1, 2, 3, 5]}
         elif model_name == 'GradientBoosting':
-            param_grid = {'learning_rate': [0.01, 0.1, 0.2], 'n_estimators': [100, 200, 300], 'max_depth': [3, 5, 7]}
+            param_grid = {'learning_rate': [0.01, 0.02, 0.03, 0.06], 'n_estimators': [150, 200, 250, 300], 'max_depth': [0.5, 0.8, 1, 2]}
         elif model_name == 'AdaBoost':
-            param_grid = {'learning_rate': [0.01, 0.1, 0.2], 'n_estimators': [50, 100, 200]}
+            param_grid = {'learning_rate': [0.01, 0.02, 0.03, 0.06], 'n_estimators': [75, 100, 150, 200]}
 
         grid_search = GridSearchCV(model, param_grid, cv=5, scoring='accuracy')
         grid_search.fit(X_train, y_train)
