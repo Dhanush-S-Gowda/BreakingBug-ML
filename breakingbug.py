@@ -32,7 +32,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 import warnings
 warnings.filterwarnings('ignore')
 
-df = pd.read_csv("/content/Kaggle/input/heart-disease-data/heart_disease_uci.csv")
+df = pd.read_csv("Kaggle/input/heart-disease-data/heart_disease_uci.csv")
 
 df.head()
 
