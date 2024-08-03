@@ -32,7 +32,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 import warnings
 warnings.filterwarnings('ignore')
 
-df = pd.read_csv("Kaggle/input/heart-disease-data/heart_disease_uci.csv")
+df = pd.read_csv("/content/Kaggle/input/heart-disease-data/heart_disease_uci.csv")
 
 df.head()
 
@@ -217,8 +217,6 @@ def impute_categorical_missing_data(passed_col):
 
   df_combined = pd.concat([df_not_null, df_null])
 
-  print(df_combined[passed_col])
-
   return df_combined[passed_col]
 
 def impute_continuous_missing_data(passed_col):
@@ -295,16 +293,16 @@ df.isnull().sum()
 
 print("_________________________________________________________________________________________________________________________________________________")
 
-sns.set(rc={"axes.facecolor":"#87CEEB","figure.facecolor":"#EEE8AA"})  # Change figure background color
+sns.set(rc={"axes.facecolor":"#87CEEB","figure.facecolor":"#EEE8AA"})
 
 palette = ["#682F2F", "#9E726F", "#D6B2B1", "#B9C0C9", "#9F8A78", "#F3AB60"]
-cmap = ListedColormap(["#682F2F", "#9E726F", "#D6B2B1", "#B9C0C9", "#9F8A78", "#F3AB60"])
+cmap = ListedColormap(palette) #changed
 
 plt.figure(figsize=(10,8))
 
 for i, col in enumerate(palette):
-    plt.subplot(3,2)
-    sns.boxenplot(color=palette[i % len(palette)])  # Use modulo to cycle through colors
+    plt.subplot(3,2, i+1) #changed
+    sns.boxenplot(color=palette[i % len(palette)])
     plt.title(i)
 
 plt.show()
@@ -319,9 +317,9 @@ cmap = ListedColormap(modified_palette)
 
 plt.figure(figsize=(10,8))
 
-for i, col in enumerate(cols):
-    plt.subplot(3,2)
-    sns.boxenplot( color=palette[i % len(palette)])  # Use modulo to cycle through colors
+for i, col in enumerate(modified_palette):
+    plt.subplot(3,2, i+1)
+    sns.boxenplot( color=palette[i % len(palette)])
     plt.title(col)
 
 plt.show()
@@ -337,9 +335,9 @@ sns.set(rc={"axes.facecolor": "#FFF9ED", "figure.facecolor": "#FFF9ED"})
 night_vision_palette = ["#00FF00", "#FF00FF", "#00FFFF", "#FFFF00", "#FF0000", "#0000FF"]
 
 plt.figure(figsize=(10, 8))
-for i, col in enumerate(cols):
-    plt.subplot(3,2)
-    sns.boxenplot( color=palette[i % len(palette)])  # Use modulo to cycle through colors
+for i, col in enumerate(night_vision_palette):
+    plt.subplot(3,2, i+1)
+    sns.boxenplot( color=palette[i % len(palette)])
     plt.title(col)
 
 plt.show()
@@ -469,7 +467,7 @@ def evaluate_classification_models(X, y, categorical_columns):
         "SVM": SVC(random_state=42),
         "Decision Tree": DecisionTreeClassifier(random_state=42),
         "Random Forest": RandomForestClassifier(random_state=42),
-        "XGBoost": xgb.XGBClassifier(random_state=42),
+        "XGBoost": XGBClassifier(random_state=42),
         "GradientBoosting": GradientBoostingClassifier(random_state=42),
         "AdaBoost": AdaBoostClassifier(random_state=42)
     }
@@ -552,7 +550,7 @@ models = {
     "SVM": SVC(),
     "Decision Tree": DecisionTreeClassifier(),
     "Random Forest": RandomForestClassifier(),
-    "XGBoost": xgb.XGBClassifier(),
+    "XGBoost": XGBClassifier(),
     "GradientBoosting": GradientBoostingClassifier(),
     "AdaBoost": AdaBoostClassifier()
 }
@@ -563,3 +561,4 @@ for model_name, result in results.items():
     print("Best hyperparameters:", result['best_params'])
     print("Accuracy:", result['accuracy'])
     print()
+
